@@ -7,9 +7,6 @@ def extractEmailThread(conversation_title: str):
     # Access the Inbox
     inbox = outlook.GetDefaultFolder(6)  # 6 refers to the Inbox folder
 
-    # Define the signature start keyword to identify where the signature begins
-    signature_start = "Dušica Drača"
-
     # Get all items (emails) in the Inbox
     messages = inbox.Items
 
@@ -25,8 +22,6 @@ def extractEmailThread(conversation_title: str):
                 
                 # Truncate the body from the start of the signature if found
                 body = message.Body
-                if signature_start in body:
-                    body = body.split(signature_start)[0]
                 # Write the email body to the file
                 file.write(f"Body:\n{body}\n")
                 file.write("\n" + "="*250 + "\n\n")  # Separator between emails

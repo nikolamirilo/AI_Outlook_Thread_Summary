@@ -14,8 +14,8 @@ def summarizeEmailThreadData():
     # Define the prompt
     prompt = {
         "role": "you are IT project manager with more than 30 years of experience specialized in insurance industry",
-        "task": "read email thread and summarize it",
-        "format": "return in md format. Title of document (#) is subject, then mention who particpants are and then summarize conversation."
+        "task": "read email thread and summarize",
+        "format": "return in md format. Title of document (format:#) is subject, then mention who particpants are and then summarize conversation. Summary of conversation should have maximum of 150 words. Subtitles are Summary and Participants (format: ##)"
     }
 
     # Fix the f-string and reference the prompt values properly
