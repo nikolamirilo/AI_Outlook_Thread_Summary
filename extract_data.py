@@ -1,7 +1,7 @@
 import win32com.client
 
 # Connect to Outlook
-def extractEmailThread(conversation_title):
+def extractEmailThread(conversation_title: str):
     outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
 
     # Access the Inbox
