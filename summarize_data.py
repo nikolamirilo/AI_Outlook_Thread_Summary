@@ -30,6 +30,7 @@ def summarizeEmailThreadData():
         }
     ],
     model="llama3-8b-8192",
+    max_tokens=8192,
     temperature=0.1
     )
 

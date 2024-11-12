@@ -1,6 +1,46 @@
 import win32com.client
+import re
 
-# Connect to Outlook
+def minimize_body(body):
+    """
+    Minimize email body by removing signatures, replies, and excess whitespace.
+    """
+    # Remove signatures based on common patterns
+    signature_patterns = [
+        r'(--\s)',          # Signature starting with --
+        r'(Best regards,)', # Common sign-off phrase
+        r'(Thanks,)',       # Another sign-off
+        r'(Sincerely,)',    # Another sign-off
+        r'(Sent from my)',  # Mobile signature
+        r'\bE:\s.*',  # Lines starting with 'E:' for email addresses
+        r'<mailto:.*?>',  # Email addresses in <mailto:...> format
+        r'https?:\/\/\S+',  # URLs
+        r'www\.\S+',  # Web links starting with www.
+        r'Vladimira Popovića.*',  # Specific address (customizable)
+        r'[\r\n]+_{2,}',  # Lines with long underscores or separators
+    ]
+    for pattern in signature_patterns:
+        match = re.search(pattern, body, re.IGNORECASE)
+        if match:
+            body = body[:match.start()]
+            break
+
+    # Remove quoted replies (e.g., "From:", "Sent:", etc.)
+    reply_patterns = [
+        r'From:\s',  # Quoted reply indicator
+        r'Sent:\s',  # Outlook reply format
+        r'Original Message',  # Forwarded/replied content
+    ]
+    for pattern in reply_patterns:
+        match = re.search(pattern, body, re.IGNORECASE)
+        if match:
+            body = body[:match.start()]
+            break
+
+    # Remove excessive blank lines
+    body = "\n".join([line.strip() for line in body.splitlines() if line.strip()])
+    return body.strip()
+
 def extractEmailThread(conversation_title: str):
     outlook = win32com.client.Dispatch("Outlook.Application").GetNamespace("MAPI")
 
@@ -20,9 +60,8 @@ def extractEmailThread(conversation_title: str):
                 file.write(f"From: {message.SenderEmailAddress}\n")
                 file.write(f"Received: {message.ReceivedTime}\n")
                 
-                # Truncate the body from the start of the signature if found
-                body = message.Body
-                # Write the email body to the file
+                # Minimize the email body
+                body = minimize_body(message.Body)
                 file.write(f"Body:\n{body}\n")
                 file.write("\n" + "="*250 + "\n\n")  # Separator between emails
 
