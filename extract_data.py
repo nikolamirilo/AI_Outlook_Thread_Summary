@@ -63,6 +63,6 @@ def extractEmailThread(conversation_title: str):
                 # Minimize the email body
                 body = minimize_body(message.Body)
                 file.write(f"Body:\n{body}\n")
-                file.write("\n" + "="*250 + "\n\n")  # Separator between emails
+                file.write("\n" + "="*100 + "\n\n")  # Separator between emails
 
     print("Email thread saved to email_thread.txt.")
